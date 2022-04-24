@@ -1,0 +1,44 @@
+<app-header></app-header>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-6">
+      <div class="card" style="width: 18rem;">
+        <div class="card-body">
+          
+          <form [formGroup]="userLoginForm" (ngSubmit)="userLogin()">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Email address</label>
+              <input type="email" formControlName="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+
+              <div id="emailHelp" class="form-text text-danger" *ngIf="formErrors.email">
+                {{ formErrors.email }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label">Password</label>
+              <input type="password" formControlName="password" class="form-control" id="exampleInputPassword1">
+              <div id="emailHelp" class="form-text text-danger" *ngIf="formErrors.password">
+                {{ formErrors.password }}
+              </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary mb-2">Login</button>
+            <p>
+              Don't have an account?
+              <a href="javascript:void(0)" [routerLink]="['/signup']">create one</a>
+            </p>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+

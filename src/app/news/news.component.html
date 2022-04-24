@@ -1,0 +1,37 @@
+<app-header></app-header>
+
+<div class="container mt-4">
+  <div class="row">
+    <ng-container *ngFor="let item of news">
+      <div class="col-md-4 ml-2 mb-4" *ngIf="item.description">
+        <div class="card">
+          <img [src]="item.urlToImage" class="card-img-top" alt="...">
+
+          <span (click)="newsDetail(item)">
+            <div class="card-header">
+              <strong>{{ item.source ? (item.source.name + ':' | uppercase) : '' }}</strong> 
+              {{ item.title | titlecase }}
+            </div>
+            <div class="card-body">
+              <p class="card-text">
+                {{ item.description }}
+              </p>
+
+              {{ item.publishedAt | date }}
+            </div>
+          </span>
+
+          <div class="card-footer">
+            <a [href]="item.url" target="_blank" class="btn btn-primary btn-sm">
+              Read full article
+            </a>
+            <button type="button" (click)="bookmark(item)" class="btn btn-outline-primary btn-sm mx-2">
+              Bookmark This news
+            </button>
+          </div>
+          
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

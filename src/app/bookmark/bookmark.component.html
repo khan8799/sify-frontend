@@ -1,0 +1,30 @@
+<app-header></app-header>
+
+<div class="container mt-4">
+  <div class="row">
+    <ng-container *ngFor="let item of news">
+      <div class="col-lg-4 col-md-6 col-sm-6 ml-2 mb-4" *ngIf="item.description">
+        <div class="card">
+          <img [src]="item.urlToImage" class="card-img-top" alt="...">
+
+          <div class="card-header">
+            <strong>{{ item.source ? (item.source.name + ':' | uppercase) : '' }}</strong> 
+            {{ item.title | titlecase }}
+          </div>
+          <div class="card-body">
+            <p class="card-text">
+              {{ item.description }}
+            </p>
+
+            <a [href]="item.url" target="_blank" class="btn btn-primary btn-sm">
+              Read full article
+            </a>
+          </div>
+          <div class="card-footer text-muted">
+            {{ item.publishedAt | date }}
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

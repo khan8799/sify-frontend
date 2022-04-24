@@ -1,0 +1,75 @@
+<app-header></app-header>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          
+          <form  [formGroup]="newsForm" (ngSubmit)="submit()">
+            <div class="mb-3">
+              <label for="exampleInput1" class="form-label">Author</label>
+              <input type="text" formControlName="author" class="form-control" id="exampleInput1">
+              <div class="form-text text-danger" *ngIf="formErrors.author">
+                {{ formErrors.author }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInput22" class="form-label">Title</label>
+              <input type="text" formControlName="title" class="form-control" id="exampleInput22">
+              <div class="form-text text-danger" *ngIf="formErrors.title">
+                {{ formErrors.title }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInput23" class="form-label">Content</label>
+              <input type="text" formControlName="content" class="form-control" id="exampleInput23">
+              <div class="form-text text-danger" *ngIf="formErrors.content">
+                {{ formErrors.content }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInput24" class="form-label">Description</label>
+              <textarea class="form-control" formControlName="description" id="exampleInput24" rows="3"></textarea>
+              <div class="form-text text-danger" *ngIf="formErrors.description">
+                {{ formErrors.description }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInput3" class="form-label">URL</label>
+              <input type="text" formControlName="url" class="form-control" id="exampleInput3">
+              <div class="form-text text-danger" *ngIf="formErrors.url">
+                {{ formErrors.url }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInput4" class="form-label">Image URL</label>
+              <input type="text" formControlName="urlToImage" class="form-control" id="exampleInput4">
+              <div class="form-text text-danger" *ngIf="formErrors.urlToImage">
+                {{ formErrors.urlToImage }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInput5" class="form-label">Source</label>
+              <input type="text" formControlName="source" class="form-control" id="exampleInput5">
+              <div class="form-text text-danger" *ngIf="formErrors.source">
+                {{ formErrors.source }}
+              </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary mb-2">Save</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

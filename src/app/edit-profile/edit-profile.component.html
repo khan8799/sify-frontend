@@ -1,0 +1,47 @@
+<app-header></app-header>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-3">
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          
+          <form  [formGroup]="userForm" (ngSubmit)="submit()">
+            <div class="mb-3">
+              <label for="exampleInput1" class="form-label">First Name</label>
+              <input type="text" formControlName="firstName" class="form-control" id="exampleInput1">
+              <div id="emailHelp" class="form-text text-danger" *ngIf="formErrors.firstName">
+                {{ formErrors.firstName }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInput2" class="form-label">Last Name</label>
+              <input type="text" formControlName="lastName" class="form-control" id="exampleInput2">
+              <div id="emailHelp" class="form-text text-danger" *ngIf="formErrors.lastName">
+                {{ formErrors.lastName }}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="exampleInput3" class="form-label">Email address</label>
+              <input type="email" formControlName="email" class="form-control" id="exampleInput3">
+              <div id="emailHelp" class="form-text text-danger" *ngIf="formErrors.email">
+                {{ formErrors.email }}
+              </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary mb-2">Edit</button>
+            <p>
+              Already have an account?
+              <a href="javascript:void(0)" [routerLink]="['/login']">login</a>
+            </p>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
