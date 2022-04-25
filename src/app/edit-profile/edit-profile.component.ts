@@ -6,6 +6,9 @@ import { UserSharedService } from '../services/user-shared.service';
 import { UserService } from '../services/user.service';
 import { FormErrors } from '../shared/utils/form-error-var';
 import { CustomValidationMessages } from '../shared/utils/validation-message';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-edit-profile',
@@ -24,6 +27,8 @@ export class EditProfileComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private _userService: UserService,
     private _userSharedService$: UserSharedService,
+    private _toasterService: ToastrService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -60,20 +65,24 @@ export class EditProfileComponent implements OnInit, OnDestroy {
 
   submit() {
     if (!this.isFormValid()) return;
+    this.spinner.show();
 
     const params = { _id: this.userDetail._id };
     const apiData = { ...this.userForm.value };
 
-    this._userService.edit(params, apiData).subscribe(
-      (res) => {
-        this.router.navigate(['/']);
-        if (this.userDetailSubscription)
-          this.userDetailSubscription.unsubscribe();
+    this._userService
+      .edit(params, apiData)
+      .pipe(finalize(() => this.spinner.hide()))
+      .subscribe(
+        (res) => {
+          this._toasterService.success('Success', 'Profile edited successfully.', {closeButton: true});
+          if (this.userDetailSubscription)
+            this.userDetailSubscription.unsubscribe();
 
-        this._userSharedService$.changeUserInfo(res.payload);
-      },
-      (err) => console.log(err)
-    );
+          this._userSharedService$.changeUserInfo(res.payload);
+        },
+        (err) => this._toasterService.error('Error', err.message, {closeButton: true})
+      );
   }
 
   isFormValid() {

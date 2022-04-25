@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs/operators';
 import { UserService } from '../services/user.service';
 import { FormErrors } from '../shared/utils/form-error-var';
 import { CustomValidationMessages } from '../shared/utils/validation-message';
@@ -19,6 +22,8 @@ export class SignupComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private _userService: UserService,
+    private _toasterService: ToastrService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -37,13 +42,20 @@ export class SignupComponent implements OnInit {
 
   submit() {
     if (!this.isFormValid()) return;
+    this.spinner.show();
 
     const apiData = { ...this.userForm.value };
 
-    this._userService.add(apiData).subscribe(
-      (res) => this.router.navigate(['/login']),
-      (err) => console.log(err)
-    );
+    this._userService
+      .add(apiData)
+      .pipe(finalize(() => this.spinner.hide()))
+      .subscribe(
+        (res) => {
+          this._toasterService.success('Success', 'Profile created successfully.', {closeButton: true});
+          this.router.navigate(['/login']);
+        },
+        (err) => this._toasterService.error('Error', err.message, {closeButton: true})
+      );
   }
 
   isFormValid() {

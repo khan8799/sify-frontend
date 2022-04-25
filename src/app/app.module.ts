@@ -19,6 +19,9 @@ import { BookmarkComponent } from './bookmark/bookmark.component';
 import { NewsAddComponent } from './news-add/news-add.component';
 import { NewsDetailComponent } from './news-detail/news-detail.component';
 import { EditProfileComponent } from './edit-profile/edit-profile.component';
+import { ToastrModule } from 'ngx-toastr';
+import { NgxSpinnerModule } from "ngx-spinner";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -37,7 +40,10 @@ import { EditProfileComponent } from './edit-profile/edit-profile.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AppRoutingModule
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    ToastrModule.forRoot(),
+    NgxSpinnerModule,
   ],
   providers: [
     {

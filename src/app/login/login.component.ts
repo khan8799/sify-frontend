@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs/operators';
 import { UserService } from '../services/user.service';
 import { FormErrors } from '../shared/utils/form-error-var';
 import { CustomValidationMessages } from '../shared/utils/validation-message';
@@ -16,9 +18,10 @@ export class LoginComponent implements OnInit {
   public validationMessages: any = CustomValidationMessages.validationMessages;
 
   constructor(
-    private router: Router,
     private fb: FormBuilder,
     private _userService: UserService,
+    private _toasterService: ToastrService,
+    private spinner: NgxSpinnerService
   ) {}
 
   ngOnInit(): void {
@@ -32,26 +35,24 @@ export class LoginComponent implements OnInit {
     });
   }
 
-
   userLogin() {
     if (!this.isFormValid()) return;
 
+    this.spinner.show();
+
     const apiData = { ...this.userLoginForm.value };
 
-    this._userService.login(apiData).subscribe(
-      (res) => {
-        localStorage.setItem(
-          "token",
-          JSON.stringify(res.token)
-        );
-        localStorage.setItem(
-          "userDetail",
-          JSON.stringify(res.user)
-        );
-        window.location.href = "/";
-      },
-      (err) => console.log(err)
-    );
+    this._userService
+      .login(apiData)
+      .pipe(finalize(() => this.spinner.hide()))
+      .subscribe(
+        (res) => {
+          this._toasterService.success('Success', 'Login successfully.', {closeButton: true});
+          localStorage.setItem("token", JSON.stringify(res.token));
+          window.location.href = "/";
+        },
+        (err) => this._toasterService.error('Error', err.message, {closeButton: true})
+      );
   }
 
   isFormValid() {

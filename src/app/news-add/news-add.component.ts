@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { NewsService } from '../services/news.service';
 import { UserSharedService } from '../services/user-shared.service';
 import { FormErrors } from '../shared/utils/form-error-var';
@@ -24,7 +27,9 @@ export class NewsAddComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private _userSharedService$: UserSharedService,
-    private _newsService: NewsService
+    private _newsService: NewsService,
+    private _toasterService: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -52,6 +57,7 @@ export class NewsAddComponent implements OnInit {
 
   submit() {
     if (!this.isFormValid()) return;
+    this.spinner.show();
 
     const data = {
       user: this.userDetail._id,
@@ -65,10 +71,13 @@ export class NewsAddComponent implements OnInit {
 
     this._newsService
       .add(data)
+      .pipe(finalize(() => this.spinner.hide()))
       .subscribe(
         res => {
+          this._toasterService.success('Success', 'News bookmarked successfully.', {closeButton: true});
           this.router.navigate(['/']);
-        }
+        },
+        (err) => this._toasterService.error('Error', err.message, {closeButton: true})
       )
   }
 

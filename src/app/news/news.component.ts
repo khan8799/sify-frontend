@@ -5,6 +5,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { News } from '../models/News';
 import { UserSharedService } from '../services/user-shared.service';
 import { forkJoin, Subscription } from 'rxjs';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-news',
@@ -20,7 +23,9 @@ export class NewsComponent implements OnInit, OnDestroy {
     private router: Router,
     private _userSharedService$: UserSharedService,
     private _newsService: NewsService,
-    private _newsSharedService: NewsSharedService
+    private _newsSharedService: NewsSharedService,
+    private _toasterService: ToastrService,
+    private spinner: NgxSpinnerService
   ) { }
 
   ngOnInit(): void {
@@ -39,7 +44,10 @@ export class NewsComponent implements OnInit, OnDestroy {
   }
 
   combineNews() {
+    this.spinner.show();
+
     forkJoin([this.getThirdPartNews(), this.getNews()])
+      .pipe(finalize(() => this.spinner.hide()))
       .subscribe(
         news => {
           const news1 = news[0].articles;
@@ -69,13 +77,16 @@ export class NewsComponent implements OnInit, OnDestroy {
       isBookmark: true,
       ...news
     }
+    this.spinner.show();
 
     this._newsService
       .add(data)
+      .pipe(finalize(() => this.spinner.hide()))
       .subscribe(
         res => {
-          console.log(res)
-        }
+          this._toasterService.success('Success', 'News bookmarked successfully.', {closeButton: true});
+        },
+        (err) => this._toasterService.error('Error', err.message, {closeButton: true})
       )
   }
 
